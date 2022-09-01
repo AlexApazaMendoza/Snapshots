@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1079618746115",
+    "project_id": "snapshots-dc3da",
+    "storage_bucket": "snapshots-dc3da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079618746115:android:49792caf5dbf1bccfb9b36",
+        "android_client_info": {
+          "package_name": "com.example.snapshots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079618746115-qsj3hq00u8j82lp27m7hgk68mmpsr11e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp40GGXfvDmTSHaMaVr7cufIZ_5lfnuYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079618746115-qsj3hq00u8j82lp27m7hgk68mmpsr11e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
