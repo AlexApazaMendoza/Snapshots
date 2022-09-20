@@ -17,9 +17,11 @@ import com.example.snapshots.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.firebase.ui.database.SnapshotParser
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -149,7 +151,20 @@ class HomeFragment : Fragment(), HomeAux {
                 .reference
                 .child("snapshots")
 
-        databaseReference.child(snapshot.id!!).removeValue()
+        //databaseReference.child(snapshot.id!!).removeValue()
+
+        val storageReference = FirebaseStorage.getInstance().reference
+            .child("snapshots")
+            .child(FirebaseAuth.getInstance().currentUser!!.uid)
+            .child(snapshot.id!!)
+
+        storageReference.delete().addOnCompleteListener {
+            if(it.isSuccessful){
+                databaseReference.child(snapshot.id!!).removeValue()
+            } else{
+                Snackbar.make(mBinding.root,getString(R.string.home_delete_photo_error),Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setLike(snapshot: Snapshot, checked: Boolean){
