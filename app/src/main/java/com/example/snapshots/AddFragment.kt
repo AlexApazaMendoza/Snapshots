@@ -41,10 +41,8 @@ class AddFragment : Fragment() {
     private var mPhotoSelectedUri: Uri? = null
     private lateinit var mStorageReference: StorageReference
     private lateinit var mDatabaseReference: DatabaseReference
-    private val RC_GALLERY = 0
 
-    private val responseLauncher = registerForActivityResult(StartActivityForResult()){
-        Log.i("TestAlex","resultCode: "+it.resultCode)
+    private val galleryResult = registerForActivityResult(StartActivityForResult()){
         if(it.resultCode == Activity.RESULT_OK){
             mPhotoSelectedUri = it.data?.data
             mBinding.imgPhoto.setImageURI(mPhotoSelectedUri)
@@ -87,9 +85,7 @@ class AddFragment : Fragment() {
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        /*startActivityForResult(intent, RC_GALLERY)*/
-        responseLauncher.launch(intent/*null*/)
-        
+        galleryResult.launch(intent)
     }
 
     private fun postSnapShot() {
