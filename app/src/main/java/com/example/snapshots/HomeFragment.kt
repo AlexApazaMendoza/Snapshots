@@ -31,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), HomeAux {
 
     private lateinit var mBinding: FragmentHomeBinding
 
@@ -136,6 +136,10 @@ class HomeFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         mFirebaseAdapter.stopListening()
+    }
+
+    override fun goToTop() {
+        mBinding.recyclerView.smoothScrollToPosition(0)
     }
 
     private fun deleteSnapshot(snapshot: Snapshot){
