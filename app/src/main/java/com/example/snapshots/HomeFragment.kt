@@ -3,11 +3,11 @@ package com.example.snapshots
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,14 +16,12 @@ import com.example.snapshots.databinding.FragmentHomeBinding
 import com.example.snapshots.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebase.ui.database.SnapshotParser
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -41,7 +39,6 @@ class HomeFragment : Fragment(), HomeAux {
 
     private lateinit var mLayoutManager : RecyclerView.LayoutManager
 
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -56,7 +53,7 @@ class HomeFragment : Fragment(), HomeAux {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentHomeBinding.inflate(inflater, container, false)
         return mBinding.root
         // Inflate the layout for this fragment
@@ -77,19 +74,19 @@ class HomeFragment : Fragment(), HomeAux {
 
         val options = FirebaseRecyclerOptions
             .Builder<Snapshot>()
-            .setQuery(query, SnapshotParser {
+            .setQuery(query) {
                 val snapshot = it.getValue(Snapshot::class.java)
                 snapshot!!.id = it.key
                 snapshot
-            }).build()
+            }.build()
 
         mFirebaseAdapter = object :FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>(options){
             private lateinit var mContext:Context
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SnapshotHolder {
                 mContext = parent.context
-                val view = LayoutInflater.from(mContext).inflate(R.layout.item_snapshot, parent,false)
-                return SnapshotHolder(view)
+                val viewF = LayoutInflater.from(mContext).inflate(R.layout.item_snapshot, parent,false)
+                return SnapshotHolder(viewF)
             }
 
             override fun onBindViewHolder(holder: SnapshotHolder, position: Int, model: Snapshot) {
@@ -188,7 +185,7 @@ class HomeFragment : Fragment(), HomeAux {
             binding.btnDelete.setOnClickListener {
                 deleteSnapshot(snapshot)
             }
-            binding.cbLike.setOnCheckedChangeListener { compoundButton, checked ->
+            binding.cbLike.setOnCheckedChangeListener { _, checked ->
                 setLike(snapshot, checked)
             }
         }
@@ -203,7 +200,6 @@ class HomeFragment : Fragment(), HomeAux {
          * @param param2 Parameter 2.
          * @return A new instance of fragment HomeFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {

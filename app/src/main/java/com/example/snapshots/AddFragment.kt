@@ -1,17 +1,15 @@
 package com.example.snapshots
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.*
 import com.example.snapshots.databinding.FragmentAddBinding
 import com.google.android.material.snackbar.Snackbar
@@ -63,7 +61,7 @@ class AddFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentAddBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         return mBinding.root
@@ -88,6 +86,7 @@ class AddFragment : Fragment() {
         galleryResult.launch(intent)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun postSnapShot() {
         mBinding.progressBar.visibility = View.VISIBLE
         val key = mDatabaseReference.push().key!!
@@ -106,8 +105,8 @@ class AddFragment : Fragment() {
                 }
                 .addOnSuccessListener {
                     Snackbar.make(mBinding.root, "Instantanea publicada", Snackbar.LENGTH_SHORT).show()
-                    it.storage.downloadUrl.addOnSuccessListener {
-                        saveSnapshot(key, it.toString(), mBinding.etTitle.text.toString().trim())
+                    it.storage.downloadUrl.addOnSuccessListener { uri ->
+                        saveSnapshot(key, uri.toString(), mBinding.etTitle.text.toString().trim())
                         mBinding.tilTitle.visibility = View.GONE
                         mBinding.tvMessage.text = getString(R.string.post_message_title)
                     }
@@ -132,7 +131,7 @@ class AddFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment AddFragment.
          */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             AddFragment().apply {
@@ -144,6 +143,6 @@ class AddFragment : Fragment() {
         /***
          * CONSTANTS
          */
-        val PATH_SNAPSHOT = "snapshots"
+        const val PATH_SNAPSHOT = "snapshots"
     }
 }
