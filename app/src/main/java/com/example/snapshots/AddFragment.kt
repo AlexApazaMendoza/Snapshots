@@ -14,6 +14,12 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.*
 import com.example.snapshots.databinding.FragmentAddBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import kotlin.math.roundToInt
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +38,8 @@ class AddFragment : Fragment() {
 
     private lateinit var mBinding: FragmentAddBinding
     private var mPhotoSelectedUri: Uri? = null
+    private lateinit var mStorageReference: StorageReference
+    private lateinit var mDatabaseReference: DatabaseReference
     private val RC_GALLERY = 0
 
     private val responseLauncher = registerForActivityResult(StartActivityForResult()){
@@ -71,17 +79,51 @@ class AddFragment : Fragment() {
         mBinding.btnSelect.setOnClickListener {
             openGallery()
         }
+
+        mStorageReference = FirebaseStorage.getInstance().reference
+        mDatabaseReference = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
     }
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         /*startActivityForResult(intent, RC_GALLERY)*/
-        responseLauncher.launch(intent)
+        responseLauncher.launch(intent/*null*/)
         
     }
 
     private fun postSnapShot() {
+        mBinding.progressBar.visibility = View.VISIBLE
+        val key = mDatabaseReference.push().key!!
+        mStorageReference.child(PATH_SNAPSHOT).child("my_photo")
+        val storageReference = mStorageReference.child(PATH_SNAPSHOT).child("my_photo")
+        mPhotoSelectedUri?.let { mPhotoSelectedUri ->
+            storageReference
+                .putFile(mPhotoSelectedUri)
+                .addOnProgressListener {
+                    val progress = (100 * it.bytesTransferred/it.totalByteCount).toDouble()
+                    mBinding.progressBar.progress = progress.roundToInt()
+                    mBinding.tvMessage.text = "$progress%"
+                }
+                .addOnCompleteListener{
+                    mBinding.progressBar.visibility = View.INVISIBLE
+                }
+                .addOnSuccessListener {
+                    Snackbar.make(mBinding.root, "Instantanea publicada", Snackbar.LENGTH_SHORT).show()
+                    it.storage.downloadUrl.addOnSuccessListener {
+                        saveSnapshot(key, it.toString(), mBinding.etTitle.text.toString().trim())
+                        mBinding.tilTitle.visibility = View.GONE
+                        mBinding.tvMessage.text = getString(R.string.post_message_title)
+                    }
+                }
+                .addOnFailureListener{
+                    Snackbar.make(mBinding.root, "No se pudo subir, intente más tarde", Snackbar.LENGTH_SHORT).show()
+                }
+        }
+    }
 
+    private fun saveSnapshot(key: String, url: String, title: String){
+        val snapshot = Snapshot(title =  title, photoUrl = url)
+        mDatabaseReference.child(key).setValue(snapshot)
     }
 
     companion object {
@@ -102,5 +144,9 @@ class AddFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+        /***
+         * CONSTANTS
+         */
+        val PATH_SNAPSHOT = "snapshots"
     }
 }
