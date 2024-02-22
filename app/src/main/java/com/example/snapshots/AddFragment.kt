@@ -114,6 +114,8 @@ class AddFragment : Fragment() {
                 .addOnFailureListener{
                     Snackbar.make(mBinding.root, "No se pudo subir, intente más tarde", Snackbar.LENGTH_SHORT).show()
                 }
+        } ?: run {
+            mBinding.progressBar.visibility = View.INVISIBLE
         }
     }
 

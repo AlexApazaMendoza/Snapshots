@@ -8,4 +8,5 @@
     <string name="post_message_title">Seleccione una imagen</string>
     <string name="post_message_valid_title">Por favor, añada un titulo</string>
     <string name="home_delete_photo_error">Error al eliminar la foto.</string>
+    <string name="btn_logout">Cerrar Sessión</string>
 </resources>
