@@ -120,7 +120,7 @@ class AddFragment : Fragment() {
     }
 
     private fun saveSnapshot(key: String, url: String, title: String){
-        val snapshot = Snapshot(title =  title, photoUrl = url)
+        val snapshot = Snapshot(ownerUid = FirebaseAuth.getInstance().currentUser!!.uid, title =  title, photoUrl = url)
         mDatabaseReference.child(key).setValue(snapshot)
     }
 
