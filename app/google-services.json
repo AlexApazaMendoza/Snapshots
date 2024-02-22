@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1079618746115",
+    "firebase_url": "https://snapshots-dc3da-default-rtdb.firebaseio.com",
     "project_id": "snapshots-dc3da",
     "storage_bucket": "snapshots-dc3da.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1079618746115-njcg38lsp901k6cjspbbh9ctm4gcbao3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.snapshots",
+            "certificate_hash": "a7c04a105097690aca955c9d79632a1d028a2c60"
+          }
+        },
         {
           "client_id": "1079618746115-qsj3hq00u8j82lp27m7hgk68mmpsr11e.apps.googleusercontent.com",
           "client_type": 3
